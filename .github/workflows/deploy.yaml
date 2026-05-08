@@ -18,7 +18,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/himafor_nim:latest
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/himafor_2388010026:latest
 
   deploy:
     needs: build-and-deploy
@@ -33,6 +33,6 @@ jobs:
         key: ${{ secrets.AWS_PRIVATE_KEY }}
         port: 22
         script: |
-          docker rm -f himafor_nim || true
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/himafor_nim:latest
-          docker run -d --name himafor_nim -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/himafor_nim:latest
+          docker rm -f himafor_2388010026 || true
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/himafor_2388010026:latest
+          docker run -d --name himafor_2388010026 -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/himafor_2388010026:latest
