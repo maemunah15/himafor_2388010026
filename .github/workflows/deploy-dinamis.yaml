@@ -47,8 +47,8 @@ jobs:
           username: ${{ secrets.AWS_USERNAME }}
           key: ${{ secrets.AWS_PRIVATE_KEY }}
           port: 22
-          source: "./web-dinamis/docker-compose.yml,web-dinamis/db_data/dbcompro_2388010020.sql"
-          target: "/home/ubuntu/container-dinamis"
+          source: "./web-dinamis/docker-compose.yml,web-dinamis/db_data/dbcompro.sql"
+          target: "/home/ubuntu/container-dinamis/web-dinamis"
       - name: Deploy Web Dinamis via SSH and run docker compose
         uses: appleboy/ssh-action@master
         with:
