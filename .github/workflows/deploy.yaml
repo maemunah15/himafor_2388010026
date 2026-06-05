@@ -1,7 +1,7 @@
 name: Deploy Web Static to AWS EC2
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
     paths: 
     - 'web-statis/**'
     - '.github/workflows/deploy.yaml'
