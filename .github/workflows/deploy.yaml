@@ -1,10 +1,11 @@
 name: Deploy Web Static to AWS EC2
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
     paths: 
     - 'web-statis/**'
     - '.github/workflows/deploy.yaml'
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -20,11 +21,15 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: ./web-statis
-        dockerfile: ./web-statis/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/himafor_2388010026:latest
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/himafor_2388010020:latest
 
-    - name: Deploy to EC2 via SSH and run docker compose 
+  deploy:
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+    name: Deploy to EC2 via SSH and run docker compose
+    steps:
+    - name: SSH and deploy
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.AWS_HOST }}
@@ -32,23 +37,6 @@ jobs:
         key: ${{ secrets.AWS_PRIVATE_KEY }}
         port: 22
         script: |
-          mkdir -p /home/ubuntu/himafor-web
-          cd /home/ubuntu/himafor-web
-          
-          # Stop and remove existing container
-          docker stop himafor-web-statis 2>/dev/null || true
-          docker rm himafor-web-statis 2>/dev/null || true
-          
-          # Create docker-compose.yml
-          cat > docker-compose.yml << 'EOF'
-          services:
-            web-statis:
-              image: ${{ secrets.DOCKERHUB_USERNAME }}/himafor_2388010026:latest
-              container_name: himafor-web-statis
-              ports:
-                - "8080:80"
-              restart: always
-          EOF
-          
+          cd /home/ubuntu/container-dinamis/web-dinamis
           docker compose pull
-          docker compose up -d
+          docker compose up -d --force-recreate container-statis
