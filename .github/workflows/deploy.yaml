@@ -32,7 +32,21 @@ jobs:
         key: ${{ secrets.AWS_PRIVATE_KEY }}
         port: 22
         script: |
-          cd /home/ubuntu/container-statis/web-statis
-          docker compose down
+          mkdir -p /home/ubuntu/himafor-web
+          cd /home/ubuntu/himafor-web
+          
+          # Create docker-compose.yml
+          cat > docker-compose.yml << 'EOF'
+          version: '3.8'
+          services:
+            web-statis:
+              image: ${{ secrets.DOCKERHUB_USERNAME }}/himafor_2388010026:latest
+              container_name: himafor-web-statis
+              ports:
+                - "80:80"
+              restart: always
+          EOF
+          
+          docker compose down || true
           docker compose pull
           docker compose up -d
