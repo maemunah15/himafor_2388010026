@@ -35,9 +35,15 @@ jobs:
           mkdir -p /home/ubuntu/himafor-web-dinamis
           cd /home/ubuntu/himafor-web-dinamis
           
-          # Stop and remove existing container
-          docker stop himafor-web-dinamis 2>/dev/null || true
-          docker rm himafor-web-dinamis 2>/dev/null || true
+          # Force stop and remove existing containers
+          docker-compose down -v 2>/dev/null || true
+          docker stop himafor-web-dinamis-container-dinamis-1 2>/dev/null || true
+          docker stop himafor-web-dinamis-db-webdinamis-1 2>/dev/null || true
+          docker rm -f himafor-web-dinamis-container-dinamis-1 2>/dev/null || true
+          docker rm -f himafor-web-dinamis-db-webdinamis-1 2>/dev/null || true
+          
+          # Remove old volume
+          docker volume rm himafor-web-dinamis_db_data 2>/dev/null || true
           
           # Download database file from GitHub
           mkdir -p db_data
