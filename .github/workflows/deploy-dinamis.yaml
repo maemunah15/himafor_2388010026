@@ -35,15 +35,15 @@ jobs:
           mkdir -p /home/ubuntu/himafor-web-dinamis
           cd /home/ubuntu/himafor-web-dinamis
           
-          # Force stop and remove existing containers
-          docker-compose down -v 2>/dev/null || true
-          docker stop himafor-web-dinamis-container-dinamis-1 2>/dev/null || true
-          docker stop himafor-web-dinamis-db-webdinamis-1 2>/dev/null || true
-          docker rm -f himafor-web-dinamis-container-dinamis-1 2>/dev/null || true
-          docker rm -f himafor-web-dinamis-db-webdinamis-1 2>/dev/null || true
+          # Kill all processes using port 3000
+          fuser -k 3000/tcp 2>/dev/null || true
+          sleep 2
           
-          # Remove old volume
-          docker volume rm himafor-web-dinamis_db_data 2>/dev/null || true
+          # Force stop and remove all containers
+          docker ps -a | grep -E 'himafor|dinamis' | awk '{print $1}' | xargs -r docker rm -f
+          
+          # Remove old volumes
+          docker volume prune -f
           
           # Download database file from GitHub
           mkdir -p db_data
@@ -90,6 +90,9 @@ jobs:
             himafor-network:
               driver: bridge
           EOF
+          
+          # Wait for port to be free
+          sleep 3
           
           docker compose pull
           docker compose up -d
