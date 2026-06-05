@@ -35,18 +35,20 @@ jobs:
           mkdir -p /home/ubuntu/himafor-web
           cd /home/ubuntu/himafor-web
           
+          # Stop and remove existing container
+          docker stop himafor-web-statis 2>/dev/null || true
+          docker rm himafor-web-statis 2>/dev/null || true
+          
           # Create docker-compose.yml
           cat > docker-compose.yml << 'EOF'
-          version: '3.8'
           services:
             web-statis:
               image: ${{ secrets.DOCKERHUB_USERNAME }}/himafor_2388010026:latest
               container_name: himafor-web-statis
               ports:
-                - "80:80"
+                - "8080:80"
               restart: always
           EOF
           
-          docker compose down || true
           docker compose pull
           docker compose up -d
